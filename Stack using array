@@ -1,0 +1,78 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+class Main {
+  public static void main(String[] args) {
+    Stack s= new Stack();
+    Stack s1=new Stack("surabhi","namitha","swetha");
+   
+  
+    s1.push("Anjali");
+    s1.push("Bhavana");
+    s1.push("Dimpy");
+    System.out.println(s1.pop());
+    System.out.println(s1.pop());
+    System.out.println(s1.pop());
+    
+  }
+}
+
+class Stack{
+ String[] arr;
+ String[] temp;
+ int count;
+ Stack(){
+   
+ }
+ Stack(String...items){
+   arr=new String[items.length];
+   count= (items.length); 
+   for(int i=0;i<items.length;i++){
+     arr[i]=items[i];
+   }
+ }
+ void push(String a){
+  int j;
+  temp=new String[++count];
+  for(j=0;j<count-1;j++){
+      
+       temp[j]=arr[j];
+    }
+  temp[j]=a;
+  arr=new String[count];
+  for(j=0;j<count;j++){
+   arr[j]=temp[j];
+  }
+  for(String i:temp){
+    System.out.print(i + " ");
+  }
+  System.out.println();
+ }
+ String pop(){
+  String top;
+  temp=new String[--count];
+  top=arr[count];
+  for(int j=0;j<count;j++){
+  temp[j]=arr[j];
+  
+  }
+  arr=new String[count];
+  for(int j=0;j<count;j++){
+    arr[j]=temp[j];
+    System.out.print(arr[j] + " ");
+  }
+  System.out.println();
+  return top;
+ }
+/* boolean isEmpty(){
+
+}
+ int peek(){
+     
+}*/
+}
