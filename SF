@@ -71,8 +71,18 @@ class Main {
   contact8.reportsTo(contact6);
   contact2.findContactReachTo(contact6);
   contact2.reportsTo(contact2);
-  
-  
+  Opportunity oppx=new Opportunity("Fitbit HR automation",LocalDate.of(2022,01,23),stage.NEEDANALYSIS);
+  oppx.addAmount(new BigDecimal("10000"));
+  oppx.addAccount(a4);
+  Opportunity oppRel=new Opportunity("Rel defuse",LocalDate.of(2022,2,24),stage.PROSPECTING);
+  oppRel.addAmount(new BigDecimal("20000"));
+  a3.addOpportunity(oppRel);
+  Collections.sort(Account.allAccountsList);
+  for(Account a:Account.allAccountsList)
+  {
+     System.out.println(a +",annual revenue "+ a.annualRevenue);
+  }
+  Account.filterByRevenue(new BigDecimal("5000"));
   }
 }
 /*abstract class search<T>{
@@ -249,7 +259,7 @@ class Opportunity
     }
   }
 }
-class Account
+class Account implements Comparable<Account>
 {
  static int accountsCount=0;
  int accountId;
@@ -317,12 +327,20 @@ public List<Account> getChildrenAccounts(){
   public BigDecimal getRevenue(){
     return this.annualRevenue;
   }
-  public static void filterByRevenue(BigDecimal revenue){
-   for(Account a:allAccountsList)
-   {
-    if(a.annualRevenue.compareTo(revenue) ==1 ){
+  public static void filterByRevenue(BigDecimal revenue)
+  {
+    for(Account a:allAccountsList)
+    {
+     if(a.annualRevenue.compareTo(revenue) ==1 )
+     {
       System.out.print(a+" "); 
+     }
     }
-   }
   }
+   public int compareTo(Account acc)
+   {
+     int com=this.annualRevenue.compareTo(acc.annualRevenue);
+     return com;
+   }
+  
 }
