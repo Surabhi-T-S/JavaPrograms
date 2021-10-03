@@ -1,0 +1,100 @@
+import java.lang.Math;   
+class Main {
+  public static void main(String[] args) {
+    int i,stackElement,range=51;
+    int stackAssign;
+    Stack[] stackArray=new Stack[5];
+    for(i=0;i<5;i++){
+      stackArray[i]=new Stack();//creation of Stack object
+    }
+    for(i=0;i<50;i++)
+    {
+      stackElement=(int)(Math.random()*range);
+      stackAssign=(int)(Math.random()*5);
+      for(int j=0;j<5;j++)//iterates until stackElement is pushed to stack
+      {
+           stackAssign=(int)(Math.random()*5);
+           System.out.println(stackAssign);
+           if(stackArray[j].isStackFull()==false)
+           {
+             stackArray[j].push(stackElement);
+             break;
+           }
+      }
+     
+      
+    }
+    for(i=0;i<5;i++){
+      System.out.print("Stack["+i+"]");
+      System.out.println(stackArray[i]+" ");
+    }
+   
+    
+  
+  }
+}
+
+class Stack{
+ Integer[] arr=new Integer[5];
+// Integer[] temp=arr;
+ int count=0;
+ boolean stackFull=false;
+ Integer top=null;
+ Stack(){
+   
+ }
+ Stack(Integer...items){
+   count= (items.length); 
+   top=items[count-1];
+   for(int i=0;i<items.length;i++){
+     arr[i]=items[i];
+   }
+ }
+ void push(Integer a){ 
+    if(count< 5)
+    { 
+    count++;
+    arr[count-1]=a;
+    top=arr[count-1];
+    }
+   else{
+    System.out.println("Stack is full");
+    stackFull=true;
+    }
+
+    
+ }
+ Integer pop(){
+  Integer poppedElement;
+  if(count>0)
+  {
+  poppedElement=arr[count-1];
+  arr[count-1]=null;
+  count--;
+  top=(count==0)?null:arr[count-1]; 
+  return poppedElement;
+  }
+  else{
+    System.out.println("Can't pop from empty stack");
+    return null;
+  }
+ }
+ boolean isEmpty(){
+  return (count==0);
+}
+Integer peek(){
+   // top= arr[count-1];
+    return top;
+}
+boolean isStackFull()
+{
+ return stackFull;
+}
+public String toString(){
+  String str=" ";
+  for(Integer i:arr){
+    str+= i+" ";
+  }
+  return str;
+}
+}
