@@ -1,0 +1,107 @@
+class Main {
+  public static void main(String[] args) {
+   String[] array=new String[10];
+   Stack<String> s1=new Stack<>(array,"sura","nams","swe");
+   Integer[] intArray=new Integer[10];
+   Stack<Integer> s2=new Stack<>(intArray,1,2);
+    // System.out.println("top"+s.peek());
+    for(int i=3;i<11;i++)
+    {
+    
+    s2.push(i);
+    System.out.println(s2.peek());
+    }
+    System.out.println(s2);
+    System.out.println("-------------------");
+    for(int i=0;i<10;i++){
+      System.out.println(s2.peek());
+      s2.pop();
+      
+    }
+    System.out.println(s2.isEmpty());
+    /*System.out.println(s1.peek());
+    s1.push("Tama");
+    System.out.println(s1.peek());
+    s1.push("Navee");
+    System.out.println(s1.peek());
+    s1.push("Dimpy");
+    System.out.println(s1.peek());
+     s1.push("Prajwal");
+     System.out.println(s1.peek());
+      s1.push("Sushmita");
+      System.out.println(s1.peek());
+       s1.push("Devika");
+       System.out.println(s1.peek());
+       s1.push("Armaan");
+      
+    
+      for(int i=0;i<10;i++)
+      {
+      System.out.println("Popping .."+s1.pop());
+      System.out.println("Top after pop() "+s1.peek());
+      }
+      s1.pop();*/
+  }
+}
+
+class Stack<T>{
+ int initialSize=10;
+ T[] arr;
+ //T[] temp=arr;
+ int count=0;
+ T top=null;
+ Stack(){
+   
+ }
+ Stack(T[] inputArray,T...items){
+   arr=inputArray;
+   count= (items.length); 
+   top=items[count-1];
+   for(int i=0;i<items.length;i++){
+     arr[i]=items[i];
+   }
+ }
+ void push(T a){
+  int j;
+    
+    if(count< 10)
+    { 
+    count++;
+    arr[count-1]=a;
+    top=arr[count-1];
+    }
+   else{
+    System.out.println("Stack is full");
+    }
+
+    
+ }
+ T pop(){
+  T poppedElement=null;
+  if(count>0)
+  {
+  poppedElement=arr[count-1];
+  arr[count-1]=null;
+  count--;
+  top=(count==0)?null:arr[count-1]; 
+  }
+  else{
+    System.out.println("Can't pop from empty stack");
+  }
+  return poppedElement;
+ }
+ boolean isEmpty(){
+  return (count==0);
+}
+ T peek(){
+   // top= arr[count-1];
+    return top;
+}
+public String toString(){
+  String str=" ";
+  for(T i:arr){
+    str+=i+" ";
+  }
+  return str;
+}
+}
