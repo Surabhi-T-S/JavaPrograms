@@ -1,0 +1,328 @@
+import java.util.*;
+import java.time.LocalDate;  
+import java.math.BigDecimal;  
+
+enum stage{PROSPECTING,QUALIFICATION,NEEDANALYSIS,NEGOTIATIONREVIEW,CLOSEDWON,CLOSEDLOST;}
+class Main {
+
+  public static void main(String[] args) {
+   Contact contact1=new Contact("Surabhi","T S");
+   Contact contact2=new Contact("Namitha","Shekhar");
+   Contact contact3=new Contact("Dimpy","Boddapati");
+   Contact contact4=new Contact("Dimpy","Agarwal");
+   System.out.println(Contact.filterByName("Dimp"));
+   Opportunity opp1=new Opportunity("Google testing",LocalDate.of(2022,01,28),stage.PROSPECTING);
+   opp1.addAmount(new BigDecimal("100000000000.2273343"));
+   Opportunity opp2=new Opportunity("Goldman sachs ITR system",LocalDate.of(2022,02,01),stage.NEEDANALYSIS);
+   System.out.println(Opportunity.filterByName("JP Morgan"));
+   opp2.addAmount(new BigDecimal("5000000"));
+   Account a1=new Account("Alphabet");
+   Account a2=new Account("Google");
+
+   Account a3=new Account("Reliance telecom");
+   Account a4=new Account("Fitbit");
+   Account a5=new Account("Kaggle");
+   Account a6=new Account("Youtube");
+   a4.addParentAccount(a2);
+   a2.addParentAccount(a1);
+   a5.addParentAccount(a2);
+   a6.addParentAccount(a2);
+   System.out.println(a1.getChildrenAccounts());
+   System.out.println(a2.getChildrenAccounts());
+  a2.addOpportunity(opp1);
+  Opportunity opp3=new Opportunity("Youtube marketing ",LocalDate.of(2021,12,06),stage.NEGOTIATIONREVIEW);
+  a2.addOpportunity(opp3);
+  a1.addContact(contact1);
+  a1.addContact(new Contact("Anjali","Konathala"));
+  new Contact("Sushmitha","M").addAccount(a1);
+  new Contact("Armaan","Jain").addAccount(a3);
+  Opportunity.filterByStage(stage.PROSPECTING);
+  Map<Integer,List<Opportunity>> accountToOppMap=new HashMap<>();
+  for(Account acc:Account.allAccountsList)
+  {
+    accountToOppMap.put(acc.accountId,acc.relatedOpportunities);
+  }
+  System.out.println("Account ID: List<Opportunities>");
+  System.out.println(accountToOppMap);
+  Map<Integer,List<Contact>> accountToContMap=new HashMap<>();
+  for(Account acc:Account.allAccountsList)
+  {
+    accountToContMap.put(acc.accountId,acc.relatedContacts);
+  }
+  System.out.println("Account ID: List<Contact>");
+  System.out.println(accountToContMap);
+  contact4.reportsTo(contact1);
+  contact3.reportsTo(contact1);
+  contact2.reportsTo(contact3);
+  System.out.println(contact1.reporters);
+  Map<Integer,Integer> contactToReportstoMap=new HashMap<>();
+  int reportsToId;
+ for(Contact c:Contact.allContactsList)
+  {
+   contactToReportstoMap.put(c.contactId,c.reportsTo==null?null:c.reportsTo.contactId);
+    
+  }
+  System.out.println(contactToReportstoMap);
+  Contact contact8=new Contact("Manogna","Belagal");
+  contact1.findContactReachTo(contact3);
+  contact1.reportsTo(contact8);
+  Contact contact6=Contact.allContactsList.get(4);
+  contact2.findContactReachTo(contact6);
+  contact8.reportsTo(contact6);
+  contact2.findContactReachTo(contact6);
+  contact2.reportsTo(contact2);
+  
+  
+  }
+}
+/*abstract class search<T>{
+
+  List<T> allxList,allContactsList;
+  List<T> searchResults=new ArrayList<>();
+   if(T a.getClass ==Contact)
+   {allxList= this.allContactsList;}
+   else{
+     if(T== Account){allxList= this.allAccountsList;}
+     else{allxList=this.allAccountsList};
+   }
+
+   }
+     for(T x:allxList)
+     {
+        if(contact.firstName.contains(searchThis) || contact.lastName.contains(searchThis))
+        {
+        searchResults.add(contact);
+        }
+      }
+     return searchResults;
+}*/
+class Contact
+{
+  static int contactsCount=0;
+  static List<Contact> allContactsList=new ArrayList<>();
+  int contactId;
+  String salutation,firstName,lastName,email,title,phone;
+  Account accountName;
+  Contact reportsTo;
+  List<Contact> reporters=new ArrayList<>();
+  public Contact(String fName,String lName)
+  {
+   this.firstName=fName;
+   this.lastName=lName;
+   contactId=(++contactsCount);
+   allContactsList.add(this);// maintains list of all contacts
+  }
+  public void reportsTo(Contact reportee)//adds reportee and also adds this contact under reportee's reporter list
+  {   if(reportee.findContactReachTo(this)==false && reportee!=this)
+     {
+      this.reportsTo=reportee;
+      reportee.reporters.add(this);// adds this to reportee's reporters list
+     }
+     else{
+       System.out.println("Contact you are reporting to is below or equal in hierarchy");
+     }
+  }
+  public boolean findContactReachTo(Contact a){
+    boolean contactReached=false;
+    Contact dest=null,currentContact;
+    currentContact=this;
+    while(currentContact.reportsTo!=null)// iterates till reports to is null or till destination contact is found
+    {
+     if(currentContact.reportsTo==a)
+     {
+      contactReached=true;
+      dest=currentContact.reportsTo;
+      break;
+     }
+     currentContact=currentContact.reportsTo;
+    }
+    currentContact=this;
+    if(contactReached==true)
+    { 
+      while(!currentContact.equals(dest))
+      {
+         System.out.print(currentContact.contactId+"-->");
+         currentContact=currentContact.reportsTo;
+      }
+      System.out.print(currentContact.contactId+"\n");
+    }
+    else{
+      System.out.println("No contact reach found");
+    }
+    return contactReached;
+  }
+  public static List<Contact> filterByName(String searchThis)
+  {
+     List<Contact> searchResults=new ArrayList<>();
+     for(Contact contact:allContactsList)
+     {
+        if(contact.firstName.contains(searchThis) || contact.lastName.contains(searchThis))
+        {
+        searchResults.add(contact);
+        }
+      }
+     return searchResults;
+  }
+  public String toString(){
+    return (this.contactId + " : " +this.firstName +" " + this.lastName);
+  }
+  public void addAccount(Account a)//links this contact to Account's contact list
+  {
+   this.accountName=a ;
+   int index=this.accountName.relatedContacts.indexOf(this);
+   
+    if(index!= -1)
+    {
+    this.accountName.relatedContacts.set(index,this);//updates account's contact list 
+    }
+    else{
+      this.accountName.relatedContacts.add(this);//if account's contact list don't have this contact,this one is added
+    }
+  }
+}
+class Opportunity
+{
+  static int oppCount=0;
+  static List<Opportunity> allOpportunitiesList=new ArrayList<>();
+  int oppId;
+  String oppName;
+  Account accountName;
+  LocalDate closeDate;
+  BigDecimal amount=new BigDecimal("0");
+  stage oppStage;
+  
+  Opportunity(String oppName,LocalDate closeDate,stage oppStage)
+  {
+  this.oppName=oppName;
+  this.closeDate=closeDate;
+  this.oppStage=oppStage;
+  oppId=(++oppCount);
+  Account accountName=null;
+  allOpportunitiesList.add(this);
+  }
+  public void addAmount(BigDecimal amount)
+  {//used to add opport. amount to opportunity and to update account revenue if account is set
+     this.amount=amount;
+     if(this.accountName!=null)
+     {
+     int index=this.accountName.relatedOpportunities.indexOf(this);
+     this.accountName.relatedOpportunities.set(index,this);
+     this.accountName.updateRevenue();
+    }
+  }
+  public void addAccount(Account a) //adds/updates this opportunity in Account's oppor. list & updates revenue
+  {
+    this.accountName=a;
+    int index=this.accountName.relatedOpportunities.indexOf(this);
+   
+    if(index!= -1)
+    {
+    this.accountName.relatedOpportunities.set(index,this);//updates account's opportunity list 
+    }
+    else{
+      this.accountName.relatedOpportunities.add(this);//if account's oppor. list don't have this opportunity,this one is added
+    }
+    this.accountName.updateRevenue();//for updating account's revenue whenever this method is called
+  }
+  public static List<Opportunity> filterByName(String searchThis)
+  {
+     List<Opportunity> searchResults=new ArrayList<>();
+     for(Opportunity opportunity:allOpportunitiesList)
+     {
+        if(opportunity.oppName.contains(searchThis))
+        {
+        searchResults.add(opportunity);
+        }
+      }
+     return searchResults;
+  }
+  public String toString(){
+    return(this.oppId +" : "+ this.oppName );
+  }
+  public static void filterByStage(stage opportunityStage){
+    for(Opportunity o:allOpportunitiesList)
+    {
+      if(o.oppStage ==opportunityStage)
+      {
+       System.out.print(o+" ");
+      }
+    }
+  }
+}
+class Account
+{
+ static int accountsCount=0;
+ int accountId;
+ static List<Account> allAccountsList=new ArrayList<>();
+ String accountName,website;
+ Account parentAccount;
+ private List<Account> childrenAccounts=new ArrayList<>();
+ BigDecimal annualRevenue=new BigDecimal("0");
+ List<Opportunity> relatedOpportunities=new ArrayList<>();
+ List<Contact> relatedContacts=new ArrayList<>();
+ Account(String accountName)
+ {
+   this.accountName=accountName;
+   accountId=(++accountsCount);
+   allAccountsList.add(this);
+ }
+
+public List<Account> getChildrenAccounts(){
+  return childrenAccounts;
+}
+ public void addParentAccount(Account parent)// adds parent account and adds this account in parent's childrenAccounts list
+ {
+   parentAccount=parent;
+   parent.childrenAccounts.add(this);
+ }
+ //create a method to add revenue whenever 
+ //add a line to reduce count when remove() is called
+ public static List<Account> filterByName(String searchThis)
+  {
+     List<Account> searchResults=new ArrayList<>();
+     for(Account account:allAccountsList)
+     {
+        if(account.accountName.contains(searchThis))
+        {
+        searchResults.add(account);
+        }
+      }
+     return searchResults;
+  }
+ public String toString(){
+    return(this.accountId +" : "+ this.accountName );
+  }
+  public void addOpportunity(Opportunity opportunity){//links opportunity to account and updating Account revenue thereafter
+    opportunity.accountName=this;// 
+    this.relatedOpportunities.add(opportunity);
+    annualRevenue= annualRevenue.add(opportunity.amount);
+
+    
+  }
+  public void updateRevenue(){ 
+      //used by Opportunity methods addAccount or addAmount is called
+     annualRevenue=new BigDecimal("0");
+     for(Opportunity o:relatedOpportunities)
+     {
+       annualRevenue=annualRevenue.add(o.amount);
+     }
+    
+  }
+  public void addContact(Contact contact)// links contact to this account
+  {
+     contact.accountName=this;
+     this.relatedContacts.add(contact);
+  }
+    
+  public BigDecimal getRevenue(){
+    return this.annualRevenue;
+  }
+  public static void filterByRevenue(BigDecimal revenue){
+   for(Account a:allAccountsList)
+   {
+    if(a.annualRevenue.compareTo(revenue) ==1 ){
+      System.out.print(a+" "); 
+    }
+   }
+  }
+}
