@@ -43,14 +43,14 @@ class Main {
   System.out.println("-----------------------");
 
   System.out.println("Linking contacts to accounts: can be done in 2 ways");
-  youtubeContact.addAccount(youtube);
-  youtube.addContact(youtubeContact1);
+  youtubeContact.addAccount(youtube);// add Swetha Reddy as contact
+  youtube.addContact(youtubeContact1);// add Dimple Khanna as contact
   System.out.println("Related contacts in Youtube \n"+ youtube.relatedContacts);
   System.out.println("-----------------------");
 
   System.out.println("Linking opportunity to account:can be done in 2 ways");
-  youtube.addOpportunity(youtubeOpp);// add Swetha Reddy as contact
-  youtubeOpp1.addAccount(youtube);// add Dimple Khanna as contact
+  youtube.addOpportunity(youtubeOpp);
+  youtubeOpp1.addAccount(youtube);
   System.out.println("Related Opportunities in Youtube \n"+youtube.relatedOpportunities);
   System.out.println("-----------------------");
 
@@ -84,7 +84,6 @@ class Main {
 
  System.out.println("Account wise list of all opportunities at Prospecting stage");
  Opportunity unlinkedOpp=new Opportunity("Opp 0",LocalDate.of(2021,12,10),stage.PROSPECTING);
- youtube.addOpportunity(youtubeOpp1);// it won't be displayed as it is in NEED ANAYLYSIS stage
  Opportunity.accountWiseOppStageFilter(stage.PROSPECTING);
  System.out.println("-----------------------");
 
