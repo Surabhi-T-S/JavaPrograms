@@ -6,106 +6,154 @@ enum stage{PROSPECTING,QUALIFICATION,NEEDANALYSIS,NEGOTIATIONREVIEW,CLOSEDWON,CL
 class Main {
 
   public static void main(String[] args) {
-   Contact contact1=new Contact("Surabhi","T S");
-   Contact contact2=new Contact("Namitha","Shekhar");
-   Contact contact3=new Contact("Dimpy","Boddapati");
-   Contact contact4=new Contact("Dimpy","Agarwal");
-   System.out.println(Contact.filterByName("Dimp"));
-   Opportunity opp1=new Opportunity("Google testing",LocalDate.of(2022,01,28),stage.PROSPECTING);
-   opp1.addAmount(new BigDecimal("100000000000.2273343"));
-   Opportunity opp2=new Opportunity("Goldman sachs ITR system",LocalDate.of(2022,02,01),stage.NEEDANALYSIS);
-   System.out.println(Opportunity.filterByName("JP Morgan"));
-   opp2.addAmount(new BigDecimal("5000000"));
-   Account a1=new Account("Alphabet");
-   Account a2=new Account("Google");
+   Account google=new Account("Google");
+   Account alpha=new Account("Alphabet");
+   Account youtube=new Account("Youtube");
 
-   Account a3=new Account("Reliance telecom");
-   Account a4=new Account("Fitbit");
-   Account a5=new Account("Kaggle");
-   Account a6=new Account("Youtube");
-   a4.addParentAccount(a2);
-   a2.addParentAccount(a1);
-   a5.addParentAccount(a2);
-   a6.addParentAccount(a2);
-   System.out.println(a1.getChildrenAccounts());
-   System.out.println(a2.getChildrenAccounts());
-  a2.addOpportunity(opp1);
-  Opportunity opp3=new Opportunity("Youtube marketing ",LocalDate.of(2021,12,06),stage.NEGOTIATIONREVIEW);
-  a2.addOpportunity(opp3);
-  a1.addContact(contact1);
-  a1.addContact(new Contact("Anjali","Konathala"));
-  new Contact("Sushmitha","M").addAccount(a1);
-  new Contact("Armaan","Jain").addAccount(a3);
-  Opportunity.filterByStage(stage.PROSPECTING);
-  Map<Integer,List<Opportunity>> accountToOppMap=new HashMap<>();
+   Contact googleContact=new Contact("Sameeksha","Agarwal");
+   Contact alphaContact=new Contact("Dimpy","Boddapati");
+   Contact youtubeContact=new Contact("Swetha","Reddy");
+   Contact youtubeContact1=new Contact("Dimple","Khanna");
+   Contact youtubeContact2=new Contact("Bhavna","T");
+   youtubeContact2.addAccount(youtube);
+   Opportunity googleOpp=new Opportunity("Google opp 0",LocalDate.of(2022,1,12),stage.PROSPECTING);
+   Opportunity googleOpp1=new Opportunity("Google Opp 1",LocalDate.of(2022,1,10),stage.PROSPECTING);
+   Opportunity alphaOpp=new Opportunity("Alphabet opp",LocalDate.of(2022,2,1),stage.NEEDANALYSIS);
+   Opportunity youtubeOpp=new Opportunity("Youtube opp 0",LocalDate.of(2022,1,1),stage.PROSPECTING);
+   Opportunity youtubeOpp1=new Opportunity("Youtube opp 1",LocalDate.of(2021,12,10),stage.NEEDANALYSIS);
+   
+   System.out.println("All accounts");
+   System.out.println(Account.allAccountsList);
+   System.out.println("-----------------------");
+
+   System.out.println("All contacts");
+   System.out.println(Contact.allContactsList);
+   System.out.println("-----------------------");
+    
+   System.out.println("All opportunities");
+   System.out.println(Opportunity.allOpportunitiesList);
+   System.out.println("-----------------------");
+
+  System.out.println("Searching all accounts by account name");
+  System.out.println(Account.filterByName("tube"));
+  System.out.println("Searching all contacts by contact name");
+  System.out.println(Contact.filterByName("mp"));
+  System.out.println("Searching all opportunities by opportunity name");
+  System.out.println(Opportunity.filterByName("Google"));
+  System.out.println("-----------------------");
+
+  System.out.println("Linking contacts to accounts: can be done in 2 ways");
+  youtubeContact.addAccount(youtube);
+  youtube.addContact(youtubeContact1);
+  System.out.println("Related contacts in Youtube \n"+ youtube.relatedContacts);
+  System.out.println("-----------------------");
+
+  System.out.println("Linking opportunity to account:can be done in 2 ways");
+  youtube.addOpportunity(youtubeOpp);// add Swetha Reddy as contact
+  youtubeOpp1.addAccount(youtube);// add Dimple Khanna as contact
+  System.out.println("Related Opportunities in Youtube \n"+youtube.relatedOpportunities);
+  System.out.println("-----------------------");
+
+
+  System.out.println("Account.annualRevenue updation whenever amount in opp is updated or added");
+  google.addOpportunity(googleOpp);
+  google.addOpportunity(googleOpp1);
+  googleOpp1.addAmount(new BigDecimal("200000"));
+   System.out.println("1st opp linked with amount 200000 :"+google.getRevenue());
+  googleOpp.addAmount(new BigDecimal("100000"));
+  System.out.println("2nd opp linked with amount 100000 :"+google.getRevenue());
+  googleOpp.addAmount(new BigDecimal("150000"));//addAmount can be used to edit or update, this amount overwrites previously entered amount
+  System.out.println("after updating 2nd opp amount to 150000 :"+google.getRevenue());
+  System.out.println("-----------------------");
+
+
+  System.out.println("Sort by revenue(ascending)");
+  alphaOpp.addAmount(new BigDecimal("10000"));
+  alpha.addOpportunity(alphaOpp);
+  Collections.sort(Account.allAccountsList);
+  for(Account a:Account.allAccountsList)
+  {
+   System.out.println(a.accountId + " "+ a.getRevenue());
+  }
+  System.out.println("-----------------------");
+
+  System.out.println("List all accounts with revenue > 10000");
+  Account.filterByRevenue(new BigDecimal("10000"));
+  System.out.println("-----------------------");
+ 
+
+ System.out.println("Account wise list of all opportunities at Prospecting stage");
+ Opportunity unlinkedOpp=new Opportunity("Opp 0",LocalDate.of(2021,12,10),stage.PROSPECTING);
+ youtube.addOpportunity(youtubeOpp1);// it won't be displayed as it is in NEED ANAYLYSIS stage
+ Opportunity.accountWiseOppStageFilter(stage.PROSPECTING);
+ System.out.println("-----------------------");
+
+
+ System.out.println("Tracking all contacts,opportunities,accounts");
+ System.out.println("All contact:\n"+Contact.allContactsList);
+ System.out.println("All Opps:\n"+Opportunity.allOpportunitiesList);
+ System.out.println("All accounts:\n"+Account.allAccountsList);
+ System.out.println("-----------------------");
+ 
+
+ 
+
+
+ System.out.println("Map<Integer, List<Opportunity>");//map between Account ID, list of opportunities
+ Map<Integer,List<Opportunity>> accountToOppMap=new HashMap<>();
   for(Account acc:Account.allAccountsList)
   {
     accountToOppMap.put(acc.accountId,acc.relatedOpportunities);
   }
-  System.out.println("Account ID: List<Opportunities>");
-  System.out.println(accountToOppMap);
-  Map<Integer,List<Contact>> accountToContMap=new HashMap<>();
+ System.out.println(accountToOppMap);
+ System.out.println("-----------------------");
+
+
+ System.out.println("Map<Integer,List<Contact>");
+ alpha.addContact(new Contact("Manogna","Belagal"));//add this to Account ID 2
+ Map<Integer,List<Contact>> accountToContMap=new HashMap<>();
   for(Account acc:Account.allAccountsList)
   {
     accountToContMap.put(acc.accountId,acc.relatedContacts);
   }
-  System.out.println("Account ID: List<Contact>");
   System.out.println(accountToContMap);
-  contact4.reportsTo(contact1);
-  contact3.reportsTo(contact1);
-  contact2.reportsTo(contact3);
-  System.out.println(contact1.reporters);
-  Map<Integer,Integer> contactToReportstoMap=new HashMap<>();
-  int reportsToId;
+  System.out.println("-----------------------");
+
+
+ System.out.println("Contact reach path");// reportsTo() uses findContactReach() to find out if the contact is reporting to one below it's hierarchy
+ System.out.println(youtube.relatedContacts);
+ youtubeContact2.reportsTo(youtubeContact1);//Bhavna(5) reports to Dimple(4)
+ youtubeContact1.reportsTo(youtubeContact);//Dimple(4) reports to Swetha(3)
+ youtubeContact2.findContactReachTo(youtubeContact);
+ youtubeContact.reportsTo(youtubeContact1);// doesn't set reportsTo as Dimple is below Swetha in heirarchy
+ System.out.println("3 Reports to: "+youtubeContact.reportsTo);
+ youtubeContact.reportsTo(youtubeContact);
+ System.out.println("3 Reports to:"+ youtubeContact.reportsTo);
+ System.out.println("-----------------------");
+ System.out.println("-----------------------");
+
+ System.out.println("Map -> Contact Id : ReportsTo Contact Id");
+ Map<Integer,Integer> contactToReportstoMap=new HashMap<>();
  for(Contact c:Contact.allContactsList)
   {
    contactToReportstoMap.put(c.contactId,c.reportsTo==null?null:c.reportsTo.contactId);
     
   }
   System.out.println(contactToReportstoMap);
-  Contact contact8=new Contact("Manogna","Belagal");
-  contact1.findContactReachTo(contact3);
-  contact1.reportsTo(contact8);
-  Contact contact6=Contact.allContactsList.get(4);
-  contact2.findContactReachTo(contact6);
-  contact8.reportsTo(contact6);
-  contact2.findContactReachTo(contact6);
-  contact2.reportsTo(contact2);
-  Opportunity oppx=new Opportunity("Fitbit HR automation",LocalDate.of(2022,01,23),stage.NEEDANALYSIS);
-  oppx.addAmount(new BigDecimal("10000"));
-  oppx.addAccount(a4);
-  Opportunity oppRel=new Opportunity("Rel defuse",LocalDate.of(2022,2,24),stage.PROSPECTING);
-  oppRel.addAmount(new BigDecimal("20000"));
-  a3.addOpportunity(oppRel);
-  Collections.sort(Account.allAccountsList);
+  System.out.println("-----------------------");
+
+ /* Collections.sort(Account.allAccountsList);
   for(Account a:Account.allAccountsList)
   {
      System.out.println(a +",annual revenue "+ a.annualRevenue);
   }
-  Account.filterByRevenue(new BigDecimal("5000"));
+  */
+  
+ 
   }
 }
-/*abstract class search<T>{
 
-  List<T> allxList,allContactsList;
-  List<T> searchResults=new ArrayList<>();
-   if(T a.getClass ==Contact)
-   {allxList= this.allContactsList;}
-   else{
-     if(T== Account){allxList= this.allAccountsList;}
-     else{allxList=this.allAccountsList};
-   }
 
-   }
-     for(T x:allxList)
-     {
-        if(contact.firstName.contains(searchThis) || contact.lastName.contains(searchThis))
-        {
-        searchResults.add(contact);
-        }
-      }
-     return searchResults;
-}*/
 class Contact
 {
   static int contactsCount=0;
@@ -190,7 +238,7 @@ class Contact
     }
   }
 }
-class Opportunity
+class Opportunity implements Comparable<Opportunity>
 {
   static int oppCount=0;
   static List<Opportunity> allOpportunitiesList=new ArrayList<>();
@@ -200,6 +248,7 @@ class Opportunity
   LocalDate closeDate;
   BigDecimal amount=new BigDecimal("0");
   stage oppStage;
+  static List<Opportunity> oppsFilteredByStage=new ArrayList<>();
   
   Opportunity(String oppName,LocalDate closeDate,stage oppStage)
   {
@@ -249,15 +298,66 @@ class Opportunity
   public String toString(){
     return(this.oppId +" : "+ this.oppName );
   }
-  public static void filterByStage(stage opportunityStage){
+  private static void filterByStage(stage opportunityStage)
+  {
+    //Integer accId;
     for(Opportunity o:allOpportunitiesList)
     {
       if(o.oppStage ==opportunityStage)
       {
-       System.out.print(o+" ");
+       oppsFilteredByStage.add(o);
+       /*accId= (o.accountName==null)?null: o.accountName.accountId;
+       System.out.println("Account Id ="+ accId+"Opportunity "+o);*/
       }
     }
+   // return oppsFilteredByStage;
   }
+ public int compareTo(Opportunity o)
+ {
+  if(this.accountName!=null && o.accountName != null)// how to compare if accountName is linked
+  {
+    if(this.accountName.accountId==o.accountName.accountId)
+    {
+      return 0;
+    }
+    else if(this.accountName.accountId>o.accountName.accountId)
+    {
+     return 1;
+    }
+    else
+    {
+      return -1;
+    }
+  }
+  else if(this.accountName==null && o.accountName!=null)// logic to compare first opportunity =null and next one !=null
+  {
+    return 1;
+  }
+  else{
+    return -1;// Logic to compare 1st opportunity !=null and 2nd one =null
+  }
+  
+ }
+
+ public static List<Opportunity> accountWiseOppStageFilter(stage s)
+ { oppsFilteredByStage.clear();
+   System.out.println("Account Id\tOpportunity");
+   filterByStage(s);
+   List<Opportunity> x=oppsFilteredByStage;
+   Collections.sort(x);
+   for(Opportunity i:x)
+   {
+     if(i.accountName!=null)
+     {
+     System.out.println(i.accountName.accountId+"\t\t\t"+ i);
+     }
+     else
+     {
+     System.out.println("\t\t\t"+i);
+     }
+   }
+   return x;
+ }
 }
 class Account implements Comparable<Account>
 {
@@ -303,7 +403,7 @@ public List<Account> getChildrenAccounts(){
     return(this.accountId +" : "+ this.accountName );
   }
   public void addOpportunity(Opportunity opportunity){//links opportunity to account and updating Account revenue thereafter
-    opportunity.accountName=this;// 
+    opportunity.accountName=this;
     this.relatedOpportunities.add(opportunity);
     annualRevenue= annualRevenue.add(opportunity.amount);
 
@@ -322,6 +422,7 @@ public List<Account> getChildrenAccounts(){
   {
      contact.accountName=this;
      this.relatedContacts.add(contact);
+     
   }
     
   public BigDecimal getRevenue(){
@@ -333,7 +434,7 @@ public List<Account> getChildrenAccounts(){
     {
      if(a.annualRevenue.compareTo(revenue) ==1 )
      {
-      System.out.print(a+" "); 
+      System.out.println(a+" "); 
      }
     }
   }
