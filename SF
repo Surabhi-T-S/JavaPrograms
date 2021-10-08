@@ -3,7 +3,7 @@ import java.time.LocalDate;
 import java.math.BigDecimal;  
 
 enum stage{PROSPECTING,QUALIFICATION,NEEDANALYSIS,NEGOTIATIONREVIEW,CLOSEDWON,CLOSEDLOST;}
-class Main {
+public class Main {
 
   public static void main(String[] args) {
    Account google=new Account("Google");
