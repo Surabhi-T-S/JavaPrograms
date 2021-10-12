@@ -1,57 +1,41 @@
-public class Main {
+class Main {
   static String s,toSearch;
   static String[] charArray,toSearchArray;
   public static void main(String[] args) {
-    s="Helworjdc ";
+    s=" T S Surabhi ";
     charArray= s.split("");
-    toSearch="wor";
+    toSearch="T S";
     toSearchArray=toSearch.split("");
-    
     search(charArray,toSearchArray);
   }
   public static void search(String[] str,String[] substr)
   {
-    int i,p,pos,count;
+    int i,count;
     
     int length=substr.length;
-    System.out.println(length);
-    String[] newSubArray=new String[length];
     for(i=0;i<(str.length-length+1);i++)
     { 
       int x=0;
+      count=0;  
       for(int j=i;(j< (i+length))&& (x<length);j++)
       { 
-          
-          newSubArray[x]=str[j];
+          if(substr[x].equals(str[j]))
+          {
+             count++;
+          }
+        
         
            x++;
           
            
       }
      
-    
-      count=0;      
-      for(p=0;p<length;p++)
-      {  
-        
-        if(newSubArray[p].equals(substr[p]))
-        {
-         count++;
-         System.out.print("subarray="+newSubArray[p]+" " +"substr="+substr[p] +" count="+ count);
-        }
-        System.out.println();
-        /*else{
-          System.out.println("Not equal");
-          break;
-        }*/
-      }
-     
       if(count==length)
       {
-        System.out.print("Present at : "+ i);
+        System.out.println("Present at : "+ i);
         break;
       }
-      System.out.println("Loop :" + i);
+    
     }
   }
 
