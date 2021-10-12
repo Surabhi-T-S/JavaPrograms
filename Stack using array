@@ -1,4 +1,4 @@
-class Main {
+public class Main {
   public static void main(String[] args) {
     Stack s= new Stack();
     Stack s1=new Stack("sura","nams","swe");
