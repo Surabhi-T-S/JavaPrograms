@@ -1,0 +1,37 @@
+public class Main {
+  public static void main(String[] args) {
+    int n=11;//determines the number of rows to be displayed
+    int[] currentArray,prevArray={1};
+    
+
+    for(int i=1;i<(n+1);i++)
+    { 
+      
+      for(int m=n+1;m>i;m--){
+        System.out.printf("%-2s"," ");
+      }
+      currentArray=new int[i];
+      for(int j=0;j<i;j++)
+      {
+        if(j==0 || j==(i-1))
+        {
+         currentArray[j]=1;//first and last elements are always 1
+         }
+         else
+         {
+         currentArray[j]=prevArray[j]+prevArray[j-1];
+         }//elements except first and last get values by this logic
+       
+      }
+     
+      for(int x=0;x<i;x++)
+      {
+         System.out.printf("%4d",currentArray[x]);
+         
+      }
+      System.out.println();
+      prevArray=new int[currentArray.length];
+      prevArray=currentArray;//current row is stored as prevArray as it is required to create values for next row
+    }
+  }
+}
